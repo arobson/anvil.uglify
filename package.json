@@ -1,0 +1,17 @@
+{
+  "author": "Alex Robson <alex@sharplearningcurve.com> (http://sharplearningcurve.com)",
+  "name": "anvil.uglify",
+  "description": "Uglify plugin for anvil.js",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/arobson/anvil.uglify.git"
+  },
+  "engines": {
+    "node": "~0.8.3"
+  },
+  "main": "./lib/plugin.js",
+  "dependencies": { "uglify-js": "~1.3.3" },
+  "devDependencies": {},
+  "optionalDependencies": {}
+}
