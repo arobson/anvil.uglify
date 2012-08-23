@@ -50,6 +50,8 @@ var uglifyFactory = function( _, anvil ) {
 			if( jsFiles.length > 0 ) {
 				anvil.log.step( "Uglifying " + jsFiles.length + " files" );
 				anvil.scheduler.parallel( jsFiles, this.minify, function() { done(); } );
+			} else {
+				done();
 			}
 		},
 
