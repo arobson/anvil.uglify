@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/arobson/anvil.uglify.png)](http://travis-ci.org/arobson/anvil.uglify)
 ## Anvil Uglify Plugin
 
 This plugin requires anvil.js version 0.8.* or greater.
