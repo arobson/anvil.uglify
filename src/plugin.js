@@ -4,21 +4,28 @@ var pro = require( "uglify-js" ).uglify;
 var uglifyFactory = function( _, anvil ) {
 	return anvil.plugin( {
 		name: "anvil.uglify",
-		activtiy: "post-process",
+		activity: "post-process",
 		all: false,
 		inclusive: false,
 		exclusive: false,
 		fileList: [],
+		commander: [
+			[ "-u, --uglify", "uglify all javascripts" ]
+		],
 
 		configure: function( config, command, done ) {
-			if( config["anvil.uglify"].all ) {
+			if( config["anvil.config"] ) {
+				if( config["anvil.uglify"].all ) {
+					this.all = true;
+				} else if ( config["anvil.uglify"].include ) {
+					this.inclusive = true;
+					this.fileList = config["anvil.uglify"].include;
+				} else if (config["anvil.uglify"].exclude ) {
+					this.exclusive = true;
+					this.fileList = config["anvil.uglify"].exclude;
+				}
+			} else if( command.uglify ) {
 				this.all = true;
-			} else if ( config["anvil.uglify"].include ) {
-				this.inclusive = true;
-				this.fileList = config["anvil.uglify"].include;
-			} else if (config["anvil.uglify"].exclude ) {
-				this.exclusive = true;
-				this.fileList = config["anvil.uglify"].exclude;
 			}
 			done();
 		},
@@ -27,9 +34,9 @@ var uglifyFactory = function( _, anvil ) {
 			var jsFiles = [];
 			if ( this.inclusive ) {
 				jsFiles = this.inclusive;
-			} else {
+			} else if( this.all || this.exclusive ) {
 				jsFiles = _.filter( anvil.project.files, function( file ) {
-					return file.extension() == "js";
+					return file.extension() === ".js";
 				} );
 
 				if( this.exclusive ) {
@@ -40,8 +47,10 @@ var uglifyFactory = function( _, anvil ) {
 					} );
 				}
 			}
-
-			anvil.scheduler.parallel( jsFiles, this.minify, function() { done(); } );
+			if( jsFiles.length > 0 ) {
+				anvil.log.step( "Uglifying " + jsFiles.length + " files" );
+				anvil.scheduler.parallel( jsFiles, this.minify, function() { done(); } );
+			}
 		},
 
 		minify: function( file, done ) {
