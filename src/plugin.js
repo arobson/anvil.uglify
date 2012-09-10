@@ -14,7 +14,7 @@ var uglifyFactory = function( _, anvil ) {
 		],
 
 		configure: function( config, command, done ) {
-			if( config["anvil.config"] ) {
+			if( config["anvil.uglify"] ) {
 				if( config["anvil.uglify"].all ) {
 					this.all = true;
 				} else if ( config["anvil.uglify"].include ) {
