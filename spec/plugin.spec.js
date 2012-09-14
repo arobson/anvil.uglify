@@ -24,7 +24,7 @@ describe( "when uglifying", function() {
 			},
 			function( results ) {
 				tests = results;
-				done(); 
+				done();
 			}
 		);
 	} );
