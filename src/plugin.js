@@ -14,15 +14,15 @@ var uglifyFactory = function( _, anvil ) {
 		],
 
 		configure: function( config, command, done ) {
-			if( config["anvil.uglify"] ) {
-				if( config["anvil.uglify"].all ) {
+			if( this.config ) {
+				if( this.config.all ) {
 					this.all = true;
-				} else if ( config["anvil.uglify"].include ) {
+				} else if ( this.config.include ) {
 					this.inclusive = true;
-					this.fileList = config["anvil.uglify"].include;
-				} else if (config["anvil.uglify"].exclude ) {
+					this.fileList = this.config.include;
+				} else if ( this.config.exclude ) {
 					this.exclusive = true;
-					this.fileList = config["anvil.uglify"].exclude;
+					this.fileList = this.config.exclude;
 				}
 			} else if( command.uglify ) {
 				this.all = true;
@@ -31,7 +31,8 @@ var uglifyFactory = function( _, anvil ) {
 		},
 
 		run: function( done ) {
-			var jsFiles = [];
+			var self = this,
+				jsFiles = [];
 			if ( this.inclusive ) {
 				jsFiles = this.inclusive;
 			} else if( this.all || this.exclusive ) {
@@ -41,8 +42,10 @@ var uglifyFactory = function( _, anvil ) {
 
 				if( this.exclusive ) {
 					jsFiles = _.reject( jsFiles, function( file ) {
-						return _.any( this.fileList, function( excluded ) {
-							return excluded.fullPath === file.fullPath;
+						return _.any( self.fileList, function( excluded ) {
+							var excludedAlias = anvil.fs.buildPath( [ file.relativePath, file.name ] ),
+								matched = excluded === excludedAlias || excluded === ( "." + excludedAlias );
+							return matched;
 						} );
 					} );
 				}

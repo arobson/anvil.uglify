@@ -1,18 +1,21 @@
 var should = require( "should" );
 var _ = require( "underscore" );
-var Harness = require( "anvil.js" ).PluginHarness;
+var api = require( "anvil.js" );
+var Harness = api.PluginHarness;
 
 var harness = new Harness( "anvil.uglify", "./" ),
 		tests = [];
 
-harness.addFile( "./build.json",
-	'{ "anvil.uglify": { "all": true } }' );
+// harness.addFile( "./build.json",
+// 	'{ "anvil.uglify": { "all": true } }' );
 
-harness.addFile( "./src/test.js", 
+harness.addCommandArgs( "--uglify" );
+
+harness.addFile( "./src/test.js",
 	"var x = 10;\n" +
 	"var y = 5;" );
 
-harness.expectFile( "./lib/test.min.js", 
+harness.expectFile( "./lib/test.min.js",
 	"var x=10,y=5" );
 
 describe( "when uglifying", function() {
@@ -24,6 +27,7 @@ describe( "when uglifying", function() {
 			},
 			function( results ) {
 				tests = results;
+				console.log( api.files.files );
 				done();
 			}
 		);
