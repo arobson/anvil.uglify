@@ -26,7 +26,9 @@ var uglifyFactory = function( _, anvil ) {
 					this.exclusive = true;
 					this.fileList = this.config.exclude;
 				}
-			} else if( command.uglify ) {
+			} 
+			
+			if( command.uglify ) {
 				this.all = true;
 			}
 			done();
@@ -95,7 +97,21 @@ var uglifyFactory = function( _, anvil ) {
 			var self = this;
 			anvil.fs.read( [ file.workingPath, file.name ], function( content, err ) {
 				if( !err ) {
-					ast = jsp.parse( content );
+					try {
+						ast = jsp.parse( content );
+					}
+					catch ( e ) {
+						anvil.events.raise( "build.stop", [
+							"Uglify parsing has failed in", 
+							file.name,
+							"at line",
+							e.line,
+							"col",
+							e.col,
+							"."].join(" ") );
+							
+						return;
+					}
 					ast = pro.ast_mangle( ast );
 					ast = pro.ast_squeeze( ast );
 					var final = pro.gen_code( ast ),
