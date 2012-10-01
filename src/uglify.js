@@ -33,6 +33,11 @@ var uglifyFactory = function( _, anvil ) {
 		},
 
 		run: function( done ) {
+			if( !this.all && !this.exclusive && !this.inclusive ) {
+				done();
+				return;
+			}
+
 			var self = this,
 				getRegex = function( sep ) { return anvil.utility.parseRegex( "/[\\" + sep + "]/g" ); },
 				osSep = path.sep,
