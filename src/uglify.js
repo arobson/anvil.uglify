@@ -1,5 +1,7 @@
-var jsp = require( "uglify-js" ).parser;
-var pro = require( "uglify-js" ).uglify;
+var jsp = require( "uglify-js" ).parser,
+	pro = require( "uglify-js" ).uglify,
+	minimatch = require( "minimatch" ),
+	path = require( "path" );
 
 var uglifyFactory = function( _, anvil ) {
 	return anvil.plugin( {
@@ -10,7 +12,7 @@ var uglifyFactory = function( _, anvil ) {
 		exclusive: false,
 		fileList: [],
 		commander: [
-			[ "-u, --uglify", "uglify all javascripts" ]
+			[ "-u, --uglify", "uglify all javascript" ]
 		],
 
 		configure: function( config, command, done ) {
@@ -32,23 +34,49 @@ var uglifyFactory = function( _, anvil ) {
 
 		run: function( done ) {
 			var self = this,
-				jsFiles = [];
-			if ( this.inclusive ) {
-				jsFiles = this.inclusive;
-			} else if( this.all || this.exclusive ) {
+				getRegex = function( sep ) { return anvil.utility.parseRegex( "/[\\" + sep + "]/g" ); },
+				osSep = path.sep,
+				altSep = osSep === "/" ? "\\" : "/",
+				osSepRegex = getRegex( osSep ),
+				altSepRegex = getRegex( altSep ),
+				useAlternate = false,
 				jsFiles = _.filter( anvil.project.files, function( file ) {
-					return file.extension() === ".js";
-				} );
-
-				if( this.exclusive ) {
-					jsFiles = _.reject( jsFiles, function( file ) {
-						return _.any( self.fileList, function( excluded ) {
-							var excludedAlias = anvil.fs.buildPath( [ file.relativePath, file.name ] ),
-								matched = excluded === excludedAlias || excluded === ( "." + excludedAlias );
-							return matched;
-						} );
+					return file.extension() === ".js" && !file.noCopy;
+				} ),
+				specs = _.map( self.fileList, function( spec ) {
+					if( spec.indexOf( altSep ) >= 0 ) {
+						useAlternate = true;
+					}
+					return spec;
+				} ),
+				any = function( file ) {
+					return _.any( specs, function( spec ) {
+						return file === spec ||
+								minimatch.match( [ file ], spec.replace( /^.[\/]/, "/" ), {} ).length > 0;
 					} );
-				}
+				},
+				getPath = function( file ) {
+					var relative = anvil.fs.buildPath( [ file.relativePath, file.name ] );
+					if( useAlternate ) {
+						relative = relative.replace( osSepRegex, altSep );
+					}
+					return relative;
+				},
+				exclude = function() {
+					return _.reject( jsFiles, function( file ) {
+						return any( getPath( file ) );
+					} );
+				},
+				include = function() {
+					return _.filter( jsFiles, function( file ) {
+						return any( getPath( file ) );
+					} );
+				};
+
+			if ( this.inclusive ) {
+				jsFiles = include();
+			} else if( this.exclusive ) {
+				jsFiles = exclude();
 			}
 			if( jsFiles.length > 0 ) {
 				anvil.log.step( "Uglifying " + jsFiles.length + " files" );
