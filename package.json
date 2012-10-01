@@ -2,7 +2,7 @@
   "author": "Alex Robson <alex@sharplearningcurve.com> (http://sharplearningcurve.com)",
   "name": "anvil.uglify",
   "description": "Uglify plugin for anvil.js",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "repository": {
     "type": "git",
     "url": "git://github.com/arobson/anvil.uglify.git"
@@ -18,6 +18,12 @@
   "devDependencies": {
     "should": "~1.1"
   },
+  "contributors": [
+    {
+      "name": "Jonathan Creamer",
+      "web": "http://freshbrewedcode.com/jonathancreamer/"
+    }
+  ],
   "optionalDependencies": {},
   "keywords": [ "anvil", "uglify" ]
 }

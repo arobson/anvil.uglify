@@ -38,3 +38,6 @@ Add the following snippet to the build.json to compile everything but the listed
 			"./path/to/file4",
 		]
 	}
+
+## Contributors
+  * Jonathan Creamer - without whom this plugin would still probably be bug ridden :)
