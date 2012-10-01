@@ -26,7 +26,9 @@ var uglifyFactory = function( _, anvil ) {
 					this.exclusive = true;
 					this.fileList = this.config.exclude;
 				}
-			} else if( command.uglify ) {
+			} 
+			
+			if( command.uglify ) {
 				this.all = true;
 			}
 			done();
