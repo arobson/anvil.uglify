@@ -26,7 +26,7 @@ var uglifyFactory = function( _, anvil ) {
 					this.exclusive = true;
 					this.fileList = this.config.exclude;
 				}
-			} 
+			}
 			
 			if( command.uglify ) {
 				this.all = true;
@@ -101,7 +101,7 @@ var uglifyFactory = function( _, anvil ) {
 						ast = jsp.parse( content );
 					}
 					catch ( e ) {
-						anvil.events.raise( "build.stop", [
+						anvil.raise( "build.stop", [
 							"Uglify parsing has failed in", 
 							file.name,
 							"at line",

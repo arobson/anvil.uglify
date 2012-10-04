@@ -3,7 +3,7 @@ var _ = require( "underscore" );
 var api = require( "anvil.js" );
 var Harness = api.PluginHarness;
 
-var harness = new Harness( "anvil.uglify", "./" ),
+var harness = new Harness( "anvil.uglify", "/git/js/anvil/anvil.uglify" ),
 		tests = [];
 
 // harness.addFile( "./build.json",
