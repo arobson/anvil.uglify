@@ -135,7 +135,11 @@ var uglifyFactory = function( _, anvil ) {
 		},
 
 		rename: function( name ) {
-			return name.replace( ".js", ".min.js" );
+			if( name.match( /[.]min[.]js$/ ) ) {
+				return name;
+			} else {
+				return name.replace( ".js", ".min.js" );
+			}
 		}
 	} );
 };
