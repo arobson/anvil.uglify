@@ -1,10 +1,9 @@
-var jsp = require( "uglify-js" ).parser,
-	pro = require( "uglify-js" ).uglify,
-	minimatch = require( "minimatch" ),
+var jsp,
+	pro,
 	path = require( "path" );
 
-var uglifyFactory = function( _, anvil ) {
-	return anvil.plugin( {
+module.exports = function( _, anvil ) {
+	anvil.plugin( {
 		name: "anvil.uglify",
 		activity: "post-process",
 		all: false,
@@ -40,6 +39,11 @@ var uglifyFactory = function( _, anvil ) {
 				return;
 			}
 
+			if ( !jsp || !pro ) {
+				jsp = require( "uglify-js" ).parser;
+				pro = require( "uglify-js" ).uglify;
+			}
+
 			var self = this,
 				getRegex = function( sep ) { return anvil.utility.parseRegex( "/[\\" + sep + "]/g" ); },
 				osSep = path.sep,
@@ -59,7 +63,7 @@ var uglifyFactory = function( _, anvil ) {
 				any = function( file ) {
 					return _.any( specs, function( spec ) {
 						return file === spec ||
-								minimatch.match( [ file ], spec.replace( /^.[\/]/, "/" ), {} ).length > 0;
+								anvil.fs.match( [ file ], spec.replace( /^.[\/]/, "/" ), {} ).length > 0;
 					} );
 				},
 				getPath = function( file ) {
@@ -143,5 +147,3 @@ var uglifyFactory = function( _, anvil ) {
 		}
 	} );
 };
-
-module.exports = uglifyFactory;
