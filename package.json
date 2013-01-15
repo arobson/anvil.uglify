@@ -2,7 +2,7 @@
   "author": "Alex Robson <alex@sharplearningcurve.com> (http://sharplearningcurve.com)",
   "name": "anvil.uglify",
   "description": "Uglify extension for anvil.js",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "repository": {
     "type": "git",
     "url": "git://github.com/arobson/anvil.uglify.git"
@@ -20,7 +20,7 @@
   "contributors": [
     {
       "name": "Jonathan Creamer",
-      "web": "http://freshbrewedcode.com/jonathancreamer/"
+      "web": "http://jcreamer.live"
     }
   ],
   "optionalDependencies": {},
