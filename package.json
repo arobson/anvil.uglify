@@ -12,7 +12,7 @@
   },
   "main": "./lib/uglify.js",
   "dependencies": { 
-    "uglify-js": "2.2.3"
+    "uglify-js": "3.9.4"
   },
   "devDependencies": {
     "should": "~1.1"
